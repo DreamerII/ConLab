@@ -1,8 +1,13 @@
 package com.android.denysyuk.conlab.ui.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +32,7 @@ import com.android.denysyuk.conlab.database.DataManager;
 import com.android.denysyuk.conlab.models.Currencies;
 import com.android.denysyuk.conlab.models.Finance;
 import com.android.denysyuk.conlab.utils.NetworkUtils;
+import com.android.denysyuk.conlab.utils.services.DataLoaderIntentService;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
@@ -62,6 +68,8 @@ public class DetailFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private String mId;
 
+    private BroadcastReceiver mReceiver;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
@@ -72,10 +80,7 @@ public class DetailFragment extends Fragment implements SwipeRefreshLayout.OnRef
         mUtils = new NetworkUtils(getActivity());
 
         position = mUtils.getPositionId(getActivity().getIntent().getStringExtra(RVAdapter.ORGANIZATION_POSITION));
-
     }
-
-
 
     @Nullable
     @Override
@@ -118,26 +123,6 @@ public class DetailFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swipeRefreshDetail);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-
-        mFrameLayout = (FrameLayout)v.findViewById(R.id.frameLayout);
-        fam = (FloatingActionMenu)v.findViewById(R.id.menu);
-        fam.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
-            @Override
-            public void onMenuToggle(boolean b) {
-                Log.d("DENYSYUK", "Menu = " + b);
-            }
-        });
-//        fam.setOnFloatingActionsMenuUpdateListener(new FloatingActionMenu.OnFloatingActionsMenuUpdateListener() {
-//            @Override
-//            public void onMenuExpanded() {
-//                mFrameLayout.setVisibility(View.VISIBLE);
-//            }
-//
-//            @Override
-//            public void onMenuCollapsed() {
-//                mFrameLayout.setVisibility(View.GONE);
-//            }
-//        });
 
         fabMap = (FloatingActionButton)v.findViewById(R.id.menu_item_map);
         fabMap.setOnClickListener(new View.OnClickListener() {
@@ -195,7 +180,6 @@ public class DetailFragment extends Fragment implements SwipeRefreshLayout.OnRef
         }
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_detail, menu);
@@ -218,7 +202,39 @@ public class DetailFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     @Override
     public void onRefresh() {
-        addItemView();
-        mSwipeRefreshLayout.setRefreshing(false);
+        if(mUtils.isConnectingToInternet()) {
+            listenerReceiver();
+            runService();
+        } else {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    private void runService(){
+        Intent i = new Intent(getActivity(), DataLoaderIntentService.class);
+        getActivity().startService(i);
+    }
+
+    private void listenerReceiver(){
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String intentAction = intent.getAction();
+                if(intentAction.equals("com.android.denysyuk.conlab.utils")){
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    addItemView();
+                }
+            }
+        };
+        IntentFilter mFilter = new IntentFilter();
+        mFilter.addAction("com.android.denysyuk.conlab.utils");
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, mFilter);
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d("DENYSYUK", "onDestroy()");
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
     }
 }

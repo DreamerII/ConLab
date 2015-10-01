@@ -1,6 +1,7 @@
 package com.android.denysyuk.conlab.database;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -19,6 +20,10 @@ public class DataManager {
     private Finance mFinance;
     private NetworkUtils mUtils;
     private String mDate;
+    private String mPrefDate="";
+    private static final String APP_PREFERENCES = "settings";
+    private static final String APP_PREFERENCES_DATE = "date";
+    private SharedPreferences mPreference;
 
     public void setDate(String _date){
         mDate = _date;
@@ -34,6 +39,8 @@ public class DataManager {
         mFinance = new Finance();
         mUtils = new NetworkUtils(_context);
         mDBHelper = new DBHelper(_context);
+        mPreference = mContext.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        getPreferences();
     }
 
     public static DataManager get(Context _context){
@@ -43,10 +50,27 @@ public class DataManager {
         return sDataManager;
     }
 
+    private void getPreferences(){
+        if(mPreference.contains(APP_PREFERENCES_DATE)){
+            mPrefDate = mPreference.getString(APP_PREFERENCES_DATE, " ");
+            Log.d("DENYSYUK", "PREFS DATE = " + mPrefDate);
+        }
+    }
+
+    private void setPreferences(String _date){
+        SharedPreferences.Editor edit = mPreference.edit();
+        edit.putString(APP_PREFERENCES_DATE, _date);
+        edit.apply();
+    }
+
 
     public void setFinance(Finance _finance){
         mFinance = _finance;
-        insertDB(mFinance);
+        if(!mFinance.getDate().equals(mPrefDate)) {
+            setPreferences(mFinance.getDate());
+            insertDB(mFinance);
+            Log.d("DENYSYUK", "INSERT");
+        }
     }
 
     public void insertDB(Finance _finance){

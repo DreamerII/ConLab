@@ -61,6 +61,9 @@ public class JsonDataLoader {
             String result = mRestClient.getUrl(ApiConstant.BASE_URL);
             JSONObject jsonObject = new JSONObject(result);
 
+            String date = jsonObject.getString("date");
+            mFinance.setDate(date);
+
                 Map<String, String> regionMap = new HashMap<>();
                 regionMap = toMap(new JSONObject(jsonObject.get(REGIONS).toString()));
                 mFinance.setRegions(regionMap);
@@ -139,10 +142,16 @@ public class JsonDataLoader {
                     c.setOrgId(id);
                     c.setAsk(ask);
                     c.setBid(bid);
-                    if (Double.valueOf(ask) > oldAsk)
+                    if (Double.valueOf(ask) > oldAsk) {
                         c.setAskIcon(1);
-                    if (Double.valueOf(bid) > oldBid)
+                    } else {
+                        c.setAskIcon(0);
+                    }
+                    if (Double.valueOf(bid) > oldBid) {
                         c.setBidIcon(1);
+                    } else {
+                        c.setBidIcon(0);
+                    }
                 }
             } else {
 

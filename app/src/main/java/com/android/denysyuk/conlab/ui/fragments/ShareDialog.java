@@ -98,7 +98,7 @@ public class ShareDialog extends DialogFragment {
             shareView.setDrawingCacheEnabled(true);
 
 
-            b = Bitmap.createBitmap(display.getWidth(), shareView.getH(), Bitmap.Config.ARGB_8888);
+            b = Bitmap.createBitmap(display.getWidth()/2, shareView.getH(), Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(b);
             shareView.draw(canvas);
 

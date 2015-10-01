@@ -123,26 +123,16 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/frameLayout"
-        android:background="#aaFFFFFF"
-        android:visibility="invisible"
-        android:layout_below="@id/toolbar_actionbar"/>
-
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
         fab:menu_fab_size="normal"
         fab:menu_showShadow="true"
-        fab:menu_shadowColor="#66000000"
+        fab:menu_shadowColor="#aaFFFFFF"
         fab:menu_shadowRadius="4dp"
         fab:menu_shadowXOffset="1dp"
         fab:menu_shadowYOffset="3dp"
@@ -172,7 +162,7 @@
         fab:menu_labels_maxLines="-1"
         fab:menu_labels_position="left"
         fab:menu_openDirection="up"
-        fab:menu_backgroundColor="@android:color/transparent"
+        fab:menu_backgroundColor="#aaFFFFFF"
         fab:menu_fab_show_animation="@anim/slide_up"
         fab:menu_fab_hide_animation="@anim/slide_down">
 

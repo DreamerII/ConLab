@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,8 +37,7 @@ import java.util.concurrent.ExecutionException;
  * Created by root on 27.09.15.
  */
 public class HomeFragment extends Fragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
-    private static final String APP_PREFERENCES = "settings";
-    private static final String APP_PREFERENCES_DATE = "date";
+    private static final String ACTION_RECEIVER = "com.android.denysyuk.conlab.utils";
     private SearchView mSearchView;
     private Finance mFinance;
     private DataManager mDataManager;
@@ -55,10 +55,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
 
-        mPreferences = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        if(mPreferences.contains(APP_PREFERENCES_DATE)){
-            mDate = mPreferences.getString(APP_PREFERENCES_DATE, "");
-        }
+
 
         mUtils = new NetworkUtils(getActivity());
         mUtils.runReceiver();
@@ -165,14 +162,14 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
             @Override
             public void onReceive(Context context, Intent intent) {
                 String intentAction = intent.getAction();
-                if(intentAction.equals("com.android.denysyuk.conlab.utils")){
+                if(intentAction.equals(ACTION_RECEIVER)){
                     swipeRefreshHome.setRefreshing(false);
                     setRVAdapter();
                 }
             }
         };
         IntentFilter mFilter = new IntentFilter();
-        mFilter.addAction("com.android.denysyuk.conlab.utils");
+        mFilter.addAction(ACTION_RECEIVER);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, mFilter);
     }
 
