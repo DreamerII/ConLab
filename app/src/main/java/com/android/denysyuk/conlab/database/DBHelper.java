@@ -107,7 +107,6 @@ public class DBHelper extends SQLiteOpenHelper{
         CURRENCIES_VALUE_BID + " text, " + CURRENCIES_VALUE_ASK_ICON + " text, "
         + CURRENCIES_VALUE_BID_ICON + " text)");
 
-        Log.d("DENYSYUK", "CREATE DATABASE");
     }
 
     @Override
@@ -120,7 +119,6 @@ public class DBHelper extends SQLiteOpenHelper{
         Set<String> keys = _cities.keySet();
         String[] array = keys.toArray(new String[keys.size()]);
         for (String s : array){
-            Log.d("DENYSYUK", "Key = " + s);
             ContentValues cv = new ContentValues();
             cv.put(CITIES_ID, s);
             cv.put(CITIES_NAME, _cities.get(s));
@@ -134,7 +132,6 @@ public class DBHelper extends SQLiteOpenHelper{
         Set<String> keys = _region.keySet();
         String[] array = keys.toArray(new String[keys.size()]);
         for (String s : array){
-            Log.d("DENYSYUK", "Key = " + s);
             ContentValues cv = new ContentValues();
             cv.put(REGION_ID, s);
             cv.put(REGION_NAME, _region.get(s));
@@ -148,7 +145,6 @@ public class DBHelper extends SQLiteOpenHelper{
         Set<String> keys = _currency.keySet();
         String[] array = keys.toArray(new String[keys.size()]);
         for (String s : array){
-            Log.d("DENYSYUK", "Key = " + s);
             ContentValues cv = new ContentValues();
             cv.put(CURRENCIES_ID, s);
             cv.put(CURRENCIES_NAME, _currency.get(s));
@@ -179,7 +175,6 @@ public class DBHelper extends SQLiteOpenHelper{
         List<Currencies> currencies = new ArrayList<>();
         currencies = getCurrencies(_id);
         String selection = CURRENCIES_ID + " LIKE ?";
-        //getWritableDatabase().delete(TABLE_CURRENCIES_VALUE, null, null);
         for(Currencies c : _lists){
             String[] selectionArgs = {c.getId()};
             Currencies oldCurrencies = getCurrenciesId(currencies, c.getId());
@@ -191,13 +186,12 @@ public class DBHelper extends SQLiteOpenHelper{
             cv.put(CURRENCIES_VALUE_ASK_ICON, setAskIcon(oldCurrencies, c));
             cv.put(CURRENCIES_VALUE_BID_ICON, setBidIcon(oldCurrencies, c));
 
-            Log.d("DENYSYUK", "UPDATE CURRENCIES");
+            if(getCurrenciesId(currencies, _id) != null)
+                getWritableDatabase().update(TABLE_CURRENCIES_VALUE,
+                        cv, selection, selectionArgs);
 
-            //long id = getWritableDatabase().update(TABLE_CURRENCIES_VALUE, cv, selection, selectionArgs);
-//            if(id == 0)
             getWritableDatabase().insert(TABLE_CURRENCIES_VALUE, null, cv);
 
-            //Log.d("DENYSYUK", "ID = " + id);
         }
     }
 
@@ -230,15 +224,12 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     public Map<String, String> getCities(){
-        Log.d("DENYSYUK", "getCities");
         Cursor c = getReadableDatabase().query(TABLE_CITIES, null, null, null, null, null, null);
         Map<String, String> map = new HashMap<>();
         if(c != null){
-            Log.d("DENYSYUK", "getCities c != null");
             while (c.moveToNext()){
                 map.put(c.getString(c.getColumnIndex(CITIES_ID)), c.getString(c.getColumnIndex(CITIES_NAME)));
             }
-            Log.d("DENYSYUK", "getCities map = " + map.size());
             return map;
         }
         return map;
@@ -269,13 +260,10 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     public List<Currencies> getCurrencies(String _id){
-        Log.d("DENYSYUK", "getCurrencies");
         List<Currencies> lists = new ArrayList<>();
         Cursor c = getReadableDatabase().query(TABLE_CURRENCIES_VALUE, null,
                 CURRENCIES_VALUE_OID + " LIKE ?", new String[] {_id}, null, null, null, null);
-        Log.d("DENYSYUK", "CURSOR = " + (c != null));
         if(c != null){
-            Log.d("DENYSYUK", "MOVE TO NEXT = " + c.getCount());
             while (c.moveToNext()){
                 Currencies currencies = new Currencies();
                 currencies.setId(c.getString(c.getColumnIndex(CURRENCIES_VALUE_ID)));
@@ -286,7 +274,6 @@ public class DBHelper extends SQLiteOpenHelper{
                 currencies.setBidIcon(c.getInt(c.getColumnIndex(CURRENCIES_VALUE_BID_ICON)));
 
                 lists.add(currencies);
-                Log.d("DENYSYUK", "LISTS GET CURRENCIES" + lists.size());
 
             }
         }
