@@ -1,10 +1,13 @@
 package com.android.denysyuk.conlab.database;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.android.denysyuk.conlab.models.Finance;
 import com.android.denysyuk.conlab.utils.NetworkUtils;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by root on 28.09.15.
@@ -43,6 +46,7 @@ public class DataManager {
 
     public void setFinance(Finance _finance){
         mFinance = _finance;
+        insertDB(mFinance);
     }
 
     public void insertDB(Finance _finance){
@@ -55,19 +59,25 @@ public class DataManager {
         }
     }
 
-    public Finance readDB(){
-        Log.d("DENYSYUK", "READ DATABASE");
-        mFinance.setDate(mDate);
-        mFinance.setCities(mDBHelper.getCities());
-        mFinance.setRegions(mDBHelper.getRegion());
-        mFinance.setCurrencies(mDBHelper.getCurrency());
-        mFinance.setOrganizations(mDBHelper.getOrganizations());
-
-        return mFinance;
+    public Finance readDB() throws ExecutionException, InterruptedException {
+        return new DBLoader().execute().get();
     }
 
     public Finance getFinance(){
             return mFinance;
+    }
+
+    private class DBLoader extends AsyncTask<Void, Void, Finance> {
+        @Override
+        protected Finance doInBackground(Void... params) {
+            mFinance.setDate(mDate);
+            mFinance.setCities(mDBHelper.getCities());
+            mFinance.setRegions(mDBHelper.getRegion());
+            mFinance.setCurrencies(mDBHelper.getCurrency());
+            mFinance.setOrganizations(mDBHelper.getOrganizations());
+
+            return mFinance;
+        }
     }
 
 }

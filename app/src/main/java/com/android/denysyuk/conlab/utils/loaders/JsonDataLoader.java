@@ -104,7 +104,7 @@ public class JsonDataLoader {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        mDataManager.setFinance(mFinance);
         return mFinance;
     }
 

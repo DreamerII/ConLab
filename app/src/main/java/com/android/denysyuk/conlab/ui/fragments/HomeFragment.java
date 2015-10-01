@@ -30,6 +30,8 @@ import com.android.denysyuk.conlab.models.Finance;
 import com.android.denysyuk.conlab.utils.services.DataLoaderIntentService;
 import com.android.denysyuk.conlab.utils.NetworkUtils;
 
+import java.util.concurrent.ExecutionException;
+
 /**
  * Created by root on 27.09.15.
  */
@@ -67,7 +69,13 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         if (mUtils.isConnectingToInternet()) {
             mFinance = mDataManager.getFinance();
         } else {
-            mFinance = mDataManager.readDB();
+            try {
+                mFinance = mDataManager.readDB();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -113,7 +121,6 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
     }
 
     private void setRVAdapter(){
-            mDataManager.insertDB(mFinance);
         mRVAdapter = new RVAdapter(getActivity(), mFinance);
         mRVAdapter.getFilter().filter(mFilterString);
         mRecyclerView.setAdapter(mRVAdapter);

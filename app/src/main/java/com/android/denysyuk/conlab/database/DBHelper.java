@@ -175,6 +175,7 @@ public class DBHelper extends SQLiteOpenHelper{
         List<Currencies> currencies = new ArrayList<>();
         currencies = getCurrencies(_id);
         String selection = CURRENCIES_ID + " LIKE ?";
+        //getWritableDatabase().delete(TABLE_CURRENCIES_VALUE, null, null);
         for(Currencies c : _lists){
             String[] selectionArgs = {c.getId()};
             Currencies oldCurrencies = getCurrenciesId(currencies, c.getId());
