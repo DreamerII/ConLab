@@ -102,10 +102,10 @@ public class DBHelper extends SQLiteOpenHelper{
 
         //Create currencies_value table
         db.execSQL("create table " + TABLE_CURRENCIES_VALUE + " (" +
-        CURRENCIES_VALUE_ID + " text, " + CURRENCIES_VALUE_OID + " text, "
+                CURRENCIES_VALUE_ID + " text, " + CURRENCIES_VALUE_OID + " text, "
                 + CURRENCIES_VALUE_ASK + " text, " +
-        CURRENCIES_VALUE_BID + " text, " + CURRENCIES_VALUE_ASK_ICON + " text, "
-        + CURRENCIES_VALUE_BID_ICON + " text)");
+                CURRENCIES_VALUE_BID + " text, " + CURRENCIES_VALUE_ASK_ICON + " integer, "
+                + CURRENCIES_VALUE_BID_ICON + " integer)");
 
     }
 
@@ -154,7 +154,10 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     public void insertOrganization(List<Organization> _lists){
+        List<Currencies> currencies = new ArrayList<>();
+        currencies = getCurrencies();
         getWritableDatabase().delete(TABLE_ORGANIZATIONS, null, null);
+        getWritableDatabase().delete(TABLE_CURRENCIES_VALUE, null, null);
         for(Organization o : _lists){
             ContentValues cv = new ContentValues();
             cv.put(ORGANIZATION_ID, o.getId());
@@ -167,61 +170,44 @@ public class DBHelper extends SQLiteOpenHelper{
             cv.put(ORGANIZATION_LINK, o.getLink());
 
             getWritableDatabase().insert(TABLE_ORGANIZATIONS, null, cv);
-            insertCurrencies(o.getCurrencies(), o.getId());
+            insertCurrencies(getCurrenciesListId(currencies, o.getId()), o.getCurrencies(), o.getId());
         }
     }
 
-    public void insertCurrencies(List<Currencies> _lists, final String _id) {
-        List<Currencies> currencies = new ArrayList<>();
-        currencies = getCurrencies(_id);
-        String selection = CURRENCIES_ID + " LIKE ?";
-        //getWritableDatabase().delete(TABLE_CURRENCIES_VALUE, null, null);
+    public void insertCurrencies(List<Currencies> _cur, List<Currencies> _lists, String _id) {
+        List<Currencies> values = new ArrayList<>();
+        int ask = 0;
+        int bid = 0;
+        values = _cur;
         for(Currencies c : _lists){
-            String[] selectionArgs = {c.getId()};
-            Currencies oldCurrencies = getCurrenciesId(currencies, c.getId());
+            Currencies cur = new Currencies();
+            cur = getCurrenciesId(values, c.getId());
+            if(cur != null){
+                ask = setAskBidIcon(cur.getAsk(), c.getAsk());
+                bid = setAskBidIcon(cur.getBid(), c.getBid());
+            }
             ContentValues cv = new ContentValues();
             cv.put(CURRENCIES_VALUE_ID, c.getId());
             cv.put(CURRENCIES_VALUE_OID, _id);
             cv.put(CURRENCIES_VALUE_ASK, c.getAsk());
             cv.put(CURRENCIES_VALUE_BID, c.getBid());
-            cv.put(CURRENCIES_VALUE_ASK_ICON, setAskIcon(oldCurrencies, c));
-            cv.put(CURRENCIES_VALUE_BID_ICON, setBidIcon(oldCurrencies, c));
-
-            if(getCurrenciesId(currencies, _id) != null)
-                getWritableDatabase().update(TABLE_CURRENCIES_VALUE,
-                        cv, selection, selectionArgs);
+            cv.put(CURRENCIES_VALUE_ASK_ICON, ask);
+            cv.put(CURRENCIES_VALUE_BID_ICON, bid);
 
             getWritableDatabase().insert(TABLE_CURRENCIES_VALUE, null, cv);
-
         }
+
     }
 
-    private int setAskIcon(Currencies _oldCurrencies, Currencies _newCurrencies){
-        if(_oldCurrencies != null) {
-            Double oldAsk = Double.valueOf(_oldCurrencies.getAsk());
-            Double newAsk = Double.valueOf(_newCurrencies.getAsk());
+    private int setAskBidIcon(String _old, String _new){
+        Double mOld = Double.valueOf(_old);
+        Double mNew = Double.valueOf(_new);
 
-            if (newAsk > oldAsk) {
-                return 1;
-            } else {
-                return 0;
-            }
+        if (mNew > mOld) {
+            return 1;
+        } else {
+            return 0;
         }
-        return 0;
-    }
-
-    private int setBidIcon(Currencies _oldCurrencies, Currencies _newCurrencies){
-        if(_oldCurrencies != null) {
-            Double oldBid = Double.valueOf(_oldCurrencies.getBid());
-            Double newBid = Double.valueOf(_newCurrencies.getBid());
-
-            if (newBid > oldBid) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
-        return 0;
     }
 
     public Map<String, String> getCities(){
@@ -260,11 +246,12 @@ public class DBHelper extends SQLiteOpenHelper{
         return map;
     }
 
-    public List<Currencies> getCurrencies(String _id){
+    public List<Currencies> getCurrencies(){
         List<Currencies> lists = new ArrayList<>();
         Cursor c = getReadableDatabase().query(TABLE_CURRENCIES_VALUE, null,
-                CURRENCIES_VALUE_OID + " LIKE ?", new String[] {_id}, null, null, null, null);
+               null, null, null, null, null);
         if(c != null){
+            Log.d("DENYSYUK", "Cursor count = " + c.getCount());
             while (c.moveToNext()){
                 Currencies currencies = new Currencies();
                 currencies.setId(c.getString(c.getColumnIndex(CURRENCIES_VALUE_ID)));
@@ -278,7 +265,31 @@ public class DBHelper extends SQLiteOpenHelper{
 
             }
         }
+        Log.d("DENYSYUK", "LIST SIZE = " + lists.size());
+        return lists;
 
+    }
+
+    public List<Currencies> getCurrencies(String _id){
+        List<Currencies> lists = new ArrayList<>();
+        Cursor c = getReadableDatabase().query(TABLE_CURRENCIES_VALUE, null,
+                CURRENCIES_VALUE_OID + " LIKE ?", new String[] {_id}, null, null, null, null);
+        if(c != null){
+            Log.d("DENYSYUK", "Cursor count = " + c.getCount());
+            while (c.moveToNext()){
+                Currencies currencies = new Currencies();
+                currencies.setId(c.getString(c.getColumnIndex(CURRENCIES_VALUE_ID)));
+                currencies.setOrgId(c.getString(c.getColumnIndex(CURRENCIES_VALUE_OID)));
+                currencies.setAsk(c.getString(c.getColumnIndex(CURRENCIES_VALUE_ASK)));
+                currencies.setBid(c.getString(c.getColumnIndex(CURRENCIES_VALUE_BID)));
+                currencies.setAskIcon(c.getInt(c.getColumnIndex(CURRENCIES_VALUE_ASK_ICON)));
+                currencies.setBidIcon(c.getInt(c.getColumnIndex(CURRENCIES_VALUE_BID_ICON)));
+
+                lists.add(currencies);
+
+            }
+        }
+        Log.d("DENYSYUK", "LIST SIZE = " + lists.size());
         return lists;
 
     }
@@ -303,6 +314,17 @@ public class DBHelper extends SQLiteOpenHelper{
                 lists.add(o);
             }
         }
+        return lists;
+    }
+
+    private List<Currencies> getCurrenciesListId(List<Currencies> cur, String _id){
+        List<Currencies> lists = new ArrayList<>();
+        for(Currencies c: cur){
+            if(c.getOrgId().equals(_id)){
+                lists.add(c);
+            }
+        }
+
         return lists;
     }
 

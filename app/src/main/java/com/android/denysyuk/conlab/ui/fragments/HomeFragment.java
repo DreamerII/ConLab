@@ -124,6 +124,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         mRVAdapter = new RVAdapter(getActivity(), mFinance);
         mRVAdapter.getFilter().filter(mFilterString);
         mRecyclerView.setAdapter(mRVAdapter);
+        mRVAdapter.notifyDataSetChanged();
     }
 
     private void runService(){

@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,8 +27,8 @@ import com.android.denysyuk.conlab.database.DataManager;
 import com.android.denysyuk.conlab.models.Currencies;
 import com.android.denysyuk.conlab.models.Finance;
 import com.android.denysyuk.conlab.utils.NetworkUtils;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class DetailFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private CurrenciesAdapter mAdapter;
     private ListView mListView;
 
-    private FloatingActionsMenu fam;
+    private FloatingActionMenu fam;
     private FrameLayout mFrameLayout;
     private FloatingActionButton fabMap;
     private FloatingActionButton fabLink;
@@ -119,20 +120,26 @@ public class DetailFragment extends Fragment implements SwipeRefreshLayout.OnRef
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mFrameLayout = (FrameLayout)v.findViewById(R.id.frameLayout);
-        fam = (FloatingActionsMenu)v.findViewById(R.id.multiple_actions);
-        fam.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
+        fam = (FloatingActionMenu)v.findViewById(R.id.menu);
+        fam.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
-            public void onMenuExpanded() {
-                mFrameLayout.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onMenuCollapsed() {
-                mFrameLayout.setVisibility(View.GONE);
+            public void onMenuToggle(boolean b) {
+                Log.d("DENYSYUK", "Menu = " + b);
             }
         });
+//        fam.setOnFloatingActionsMenuUpdateListener(new FloatingActionMenu.OnFloatingActionsMenuUpdateListener() {
+//            @Override
+//            public void onMenuExpanded() {
+//                mFrameLayout.setVisibility(View.VISIBLE);
+//            }
+//
+//            @Override
+//            public void onMenuCollapsed() {
+//                mFrameLayout.setVisibility(View.GONE);
+//            }
+//        });
 
-        fabMap = (FloatingActionButton)v.findViewById(R.id.action_map);
+        fabMap = (FloatingActionButton)v.findViewById(R.id.menu_item_map);
         fabMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,14 +148,14 @@ public class DetailFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 mUtils.openMap(b);
             }
         });
-        fabLink = (FloatingActionButton)v.findViewById(R.id.action_link);
+        fabLink = (FloatingActionButton)v.findViewById(R.id.menu_item_link);
         fabLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mUtils.openLink(mFinance.getOrganizations().get(position).getLink());
             }
         });
-        fabPhone = (FloatingActionButton)v.findViewById(R.id.action_phone);
+        fabPhone = (FloatingActionButton)v.findViewById(R.id.menu_item_phone);
         fabPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,12 +173,24 @@ public class DetailFragment extends Fragment implements SwipeRefreshLayout.OnRef
         for(Currencies c : lists) {
             LayoutInflater inflater1 = getActivity().getLayoutInflater();
             mItemView = inflater1.inflate(R.layout.currencies_list_item, null);
+
+            ImageView imageAsk = (ImageView)mItemView.findViewById(R.id.imageAsk);
+            ImageView imageBid = (ImageView)mItemView.findViewById(R.id.imageBid);
+
             TextView text = (TextView) mItemView.findViewById(R.id.textCashName);
             text.setText(mFinance.getCurrencies().get(c.getId()));
             TextView textAsk = (TextView) mItemView.findViewById(R.id.textAsk);
             textAsk.setText(c.getAsk());
+            if(c.getAskIcon() == 1){
+                textAsk.setTextColor(getResources().getColor(R.color.accent));
+                imageAsk.setImageResource(R.drawable.ic_red_arrow_down);
+            }
             TextView textbid = (TextView) mItemView.findViewById(R.id.textBid);
             textbid.setText(c.getBid());
+            if(c.getBidIcon() == 1){
+                textbid.setTextColor(getResources().getColor(R.color.accent));
+                imageBid.setImageResource(R.drawable.ic_red_arrow_down);
+            }
             mLayout.addView(mItemView);
         }
     }
@@ -185,7 +204,6 @@ public class DetailFragment extends Fragment implements SwipeRefreshLayout.OnRef
         searchItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Toast.makeText(getActivity(), "CLICK", Toast.LENGTH_LONG).show();
 
                 ShareDialog dialog = new ShareDialog();
                 Bundle b = new Bundle();
