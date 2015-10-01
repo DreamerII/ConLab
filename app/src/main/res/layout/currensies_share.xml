@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textId"
+        android:text="USD"
+        android:textSize="18sp"
+        android:textColor="@color/accent"
+        android:textStyle="bold"
+        android:layout_weight="2"
+        android:gravity="left"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textAskBid"
+        android:text="23.000/23.000"
+        android:textSize="18sp"
+        android:layout_weight="1"
+        android:gravity="left"/>
+
+
+</LinearLayout>

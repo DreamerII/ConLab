@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#536d7a</color>
+    <color name="primary_dark">#455A64</color>
+    <color name="primary_light">#CFD8DC</color>
+    <color name="accent">#c41163</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#B6B6B6</color>
+    <color name="icon_layout_background">#b0bfc6</color>
+    <color name="icon_menu_background">#cfd8dd</color>
+    <color name="menu_on">#64464646</color>
+    <color name="arrow_up">#006064</color>
+    <color name="arrow_down">#880e4f</color>
+</resources>
