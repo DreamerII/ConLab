@@ -104,14 +104,19 @@ public class DetailFragment extends Fragment implements SwipeRefreshLayout.OnRef
         mTextName = (TextView)v.findViewById(R.id.textName);
         mTextName.setText(mFinance.getOrganizations().get(position).getTitle());
         mTextLink = (TextView)v.findViewById(R.id.textLink);
-        Linkify.addLinks(mTextLink, Linkify.WEB_URLS|Linkify.EMAIL_ADDRESSES);
         mTextLink.setText("Сайт: " + mFinance.getOrganizations().get(position).getLink());
         mTextRegion = (TextView)v.findViewById(R.id.textRegion);
         mTextRegion.setText("Область: " + mFinance.getRegions().get(rid));
         mTextCity = (TextView)v.findViewById(R.id.textCity);
         mTextCity.setText("Город: " + mFinance.getCities().get(cid));
-        mTextPhone = (TextView)v.findViewById(R.id.textPhone);
-        mTextPhone.setText("Телефон: " + mFinance.getOrganizations().get(position).getPhone());
+        String phone;
+        if(mFinance.getOrganizations().get(position).getPhone().equals("null")) {
+            phone = getString(R.string.title_no_phone);
+        } else {
+            phone = mFinance.getOrganizations().get(position).getPhone();
+        }
+        mTextPhone = (TextView) v.findViewById(R.id.textPhone);
+        mTextPhone.setText("Телефон: " + phone);
         mTextAddress = (TextView)v.findViewById(R.id.textAddress);
         mTextAddress.setText("Адрес: " + mFinance.getOrganizations().get(position).getAddress());
 
@@ -231,5 +236,11 @@ public class DetailFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public void onDestroy() {
         super.onDestroy();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    public void onPause() {
+        getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        super.onPause();
     }
 }

@@ -76,6 +76,12 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
         super.onStop();
     }
 
+    @Override
+    public void onPause() {
+        getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        super.onPause();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -62,7 +62,13 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.FinanceViewHolder>
         holder.mName.setText(mFinance.getOrganizations().get(position).getTitle());
         holder.mRegion.setText(mFinance.getRegions().get(rid));
         holder.mCity.setText(mFinance.getCities().get(cid));
-        holder.mPhone.setText("Тел: " + mFinance.getOrganizations().get(position).getPhone());
+        String phone;
+        if(mFinance.getOrganizations().get(position).getPhone().equals("null")) {
+            phone = mContext.getString(R.string.title_no_phone);
+        } else {
+            phone = mFinance.getOrganizations().get(position).getPhone();
+        }
+        holder.mPhone.setText("Тел: " + phone);
         holder.mAddress.setText("Адрес : " + mFinance.getOrganizations().get(position).getAddress());
 
         holder.mBtnLink.setOnClickListener(new View.OnClickListener() {

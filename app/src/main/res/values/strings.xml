@@ -6,4 +6,8 @@
     <string name="action_share">Share</string>
     <string name="button_share">SHARE</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_map">Карта</string>
+    <string name="title_link">Сайт</string>
+    <string name="title_phone">Позвонить</string>
+    <string name="title_no_phone">Нет</string>
 </resources>

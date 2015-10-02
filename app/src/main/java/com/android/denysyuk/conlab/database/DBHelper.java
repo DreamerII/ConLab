@@ -103,7 +103,12 @@ public class DBHelper extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CITIES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CURRENCIES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CURRENCIES_VALUE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ORGANIZATIONS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_REGIONS);
+        onCreate(db);
     }
 
     public void insertCity(Map<String, String> _cities){
@@ -149,7 +154,7 @@ public class DBHelper extends SQLiteOpenHelper{
         List<Currencies> currencies = new ArrayList<>();
         currencies = getCurrencies();
         getWritableDatabase().delete(TABLE_ORGANIZATIONS, null, null);
-        getWritableDatabase().delete(TABLE_CURRENCIES_VALUE, null, null);
+       // getWritableDatabase().delete(TABLE_CURRENCIES_VALUE, null, null);
         for(Organization o : _lists){
             ContentValues cv = new ContentValues();
             cv.put(ORGANIZATION_ID, o.getId());
@@ -186,7 +191,12 @@ public class DBHelper extends SQLiteOpenHelper{
             cv.put(CURRENCIES_VALUE_ASK_ICON, ask);
             cv.put(CURRENCIES_VALUE_BID_ICON, bid);
 
-            getWritableDatabase().insert(TABLE_CURRENCIES_VALUE, null, cv);
+            long id = getWritableDatabase().update(TABLE_CURRENCIES_VALUE, cv,
+                    CURRENCIES_VALUE_ID + " LIKE ? AND " + CURRENCIES_VALUE_OID + " LIKE ?",
+                    new String[]{c.getId(), _id});
+            if(id == 0) {
+                getWritableDatabase().insert(TABLE_CURRENCIES_VALUE, null, cv);
+            }
         }
 
     }

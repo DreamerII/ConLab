@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -170,5 +171,18 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
     public void onDestroy() {
         super.onDestroy();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    public void onPause() {
+        getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        Log.d("DENYSYUK", "OnPause");
+        super.onPause();
+    }
+
+    @Override
+    public void onStart() {
+        getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        super.onStart();
     }
 }

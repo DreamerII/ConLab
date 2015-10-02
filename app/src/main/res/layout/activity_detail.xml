@@ -166,7 +166,7 @@
         fab:menu_labels_maxLines="-1"
         fab:menu_labels_position="left"
         fab:menu_openDirection="up"
-        fab:menu_backgroundColor="#aaFFFFFF"
+        fab:menu_backgroundColor="@color/menu_background_color"
         fab:menu_fab_show_animation="@anim/slide_up"
         fab:menu_fab_hide_animation="@anim/slide_down">
 
@@ -178,7 +178,7 @@
             fab:fab_colorNormal="@color/icon_menu_background"
             fab:fab_colorPressed="@color/icon_menu_background"
             fab:fab_size="mini"
-            fab:fab_label="Карта" />
+            fab:fab_label="@string/title_map" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menu_item_link"
@@ -188,7 +188,7 @@
             fab:fab_colorNormal="@color/icon_menu_background"
             fab:fab_colorPressed="@color/icon_menu_background"
             fab:fab_size="mini"
-            fab:fab_label="Сайт" />
+            fab:fab_label="@string/title_link" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menu_item_phone"
@@ -198,7 +198,7 @@
             fab:fab_colorNormal="@color/icon_menu_background"
             fab:fab_colorPressed="@color/icon_menu_background"
             fab:fab_size="mini"
-            fab:fab_label="Позвонить" />
+            fab:fab_label="@string/title_phone" />
 
 
 
