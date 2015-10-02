@@ -15,7 +15,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,6 +30,9 @@ import com.android.denysyuk.conlab.utils.services.DataLoaderIntentService;
 import com.android.denysyuk.conlab.utils.NetworkUtils;
 
 import java.util.concurrent.ExecutionException;
+
+import jp.wasabeef.recyclerview.animators.FlipInTopXAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 /**
  * Created by root on 27.09.15.
@@ -57,8 +59,8 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         listenerReceiver();
 
         mDataManager = DataManager.get(getActivity());
+        mUtils.runReceiver();
         if (mUtils.isConnectingToInternet()) {
-            mUtils.runReceiver();
             mFinance = mDataManager.getFinance();
         } else {
             try {

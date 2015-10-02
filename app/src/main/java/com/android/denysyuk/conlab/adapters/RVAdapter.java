@@ -10,11 +10,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.denysyuk.conlab.Animation.FlipAnimation;
 import com.android.denysyuk.conlab.R;
 import com.android.denysyuk.conlab.database.DataManager;
 import com.android.denysyuk.conlab.models.Finance;
@@ -52,11 +55,16 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.FinanceViewHolder>
 
         mUtils = new NetworkUtils(mContext);
 
+
         return fvh;
     }
 
     @Override
     public void onBindViewHolder(FinanceViewHolder holder, final int position) {
+        FlipAnimation flipAnimation = new FlipAnimation(holder.itemView, holder.itemView);
+        flipAnimation.reverse();
+        holder.view.startAnimation(flipAnimation);
+
         String cid = mFinance.getOrganizations().get(position).getCityId();
         String rid = mFinance.getOrganizations().get(position).getRegionId();
         holder.mName.setText(mFinance.getOrganizations().get(position).getTitle());
@@ -164,9 +172,11 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.FinanceViewHolder>
         ImageView mBtnMap;
         ImageView mBtnPhone;
         ImageView mBtnDetail;
+        View view;
 
         FinanceViewHolder(View itemView){
             super(itemView);
+            view = (View) itemView.findViewById(R.id.cardViewListItem);
             mCardView = (CardView)itemView.findViewById(R.id.cardViewListItem);
             mName = (TextView)itemView.findViewById(R.id.textItemName);
             mRegion = (TextView)itemView.findViewById(R.id.textItemRegion);

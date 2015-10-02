@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.android.denysyuk.conlab.adapters.RVAdapter;
 import com.android.denysyuk.conlab.database.DataManager;
+import com.android.denysyuk.conlab.models.Finance;
 import com.android.denysyuk.conlab.models.Organization;
 import com.android.denysyuk.conlab.ui.activities.MapActivity;
 import com.android.denysyuk.conlab.utils.receivers.ConventerReceiver;
@@ -19,6 +20,7 @@ import com.android.denysyuk.conlab.utils.services.DataLoaderIntentService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by root on 25.09.15.
