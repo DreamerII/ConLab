@@ -2,6 +2,7 @@ package com.android.denysyuk.conlab.utils.services;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.util.Log;
 
 import com.android.denysyuk.conlab.utils.loaders.JsonDataLoader;
 

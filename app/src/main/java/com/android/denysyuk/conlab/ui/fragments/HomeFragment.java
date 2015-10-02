@@ -54,6 +54,8 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
 
         mUtils = new NetworkUtils(getActivity());
 
+        listenerReceiver();
+
         mDataManager = DataManager.get(getActivity());
         if (mUtils.isConnectingToInternet()) {
             mUtils.runReceiver();
@@ -92,10 +94,6 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
             setRVAdapter();
         }
 
-        if(mUtils.isConnectingToInternet()) {
-            runService();
-        }
-
         return v;
     }
 
@@ -118,7 +116,6 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
     }
 
     private void runService(){
-        listenerReceiver();
         Intent i = new Intent(getActivity(), DataLoaderIntentService.class);
         getActivity().startService(i);
     }
@@ -158,6 +155,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
                 String intentAction = intent.getAction();
                 if(intentAction.equals(ACTION_RECEIVER)){
                     swipeRefreshHome.setRefreshing(false);
+                    mFinance = mDataManager.getFinance();
                     setRVAdapter();
                 }
             }
