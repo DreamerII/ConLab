@@ -3,21 +3,17 @@ package com.android.denysyuk.conlab.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.denysyuk.conlab.Animation.FlipAnimation;
+import com.android.denysyuk.conlab.animation.FlipAnimation;
 import com.android.denysyuk.conlab.R;
 import com.android.denysyuk.conlab.database.DataManager;
 import com.android.denysyuk.conlab.models.Finance;
@@ -111,6 +107,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.FinanceViewHolder>
                 mContext.startActivity(intent);
             }
         });
+
     }
 
     @Override

@@ -11,6 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -30,9 +31,6 @@ import com.android.denysyuk.conlab.utils.services.DataLoaderIntentService;
 import com.android.denysyuk.conlab.utils.NetworkUtils;
 
 import java.util.concurrent.ExecutionException;
-
-import jp.wasabeef.recyclerview.animators.FlipInTopXAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 /**
  * Created by root on 27.09.15.
@@ -146,8 +144,8 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
             mFinance = mDataManager.getFinance();
         } else {
             swipeRefreshHome.setRefreshing(false);
+            mRVAdapter.notifyDataSetChanged();
         }
-        mRVAdapter.notifyDataSetChanged();
     }
 
     private void listenerReceiver(){
