@@ -25,7 +25,7 @@ public class PlaceMapLoader extends AsyncTask<String, Void, LatLng> {
 
     @Override
     protected LatLng doInBackground(String... args) {
-        return parseCoordinates(getUrl(args[0]));
+        return getLatLng(getUrl(args[0]));
     }
 
     private String getUrl(String location) {
@@ -40,7 +40,7 @@ public class PlaceMapLoader extends AsyncTask<String, Void, LatLng> {
         return url;
     }
 
-    private LatLng parseCoordinates(String uri) {
+    private LatLng getLatLng(String uri) {
         String mJsonString=null;
         URL url = null;
         try {
@@ -48,12 +48,10 @@ public class PlaceMapLoader extends AsyncTask<String, Void, LatLng> {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
         try {
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setConnectTimeout(10000);
             httpURLConnection.setRequestMethod("GET");
-
             if (httpURLConnection.getResponseCode() == 200) {
                 InputStreamReader isr = new InputStreamReader(httpURLConnection.getInputStream());
                 BufferedReader reader = new BufferedReader(isr);

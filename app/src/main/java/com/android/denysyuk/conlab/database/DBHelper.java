@@ -36,7 +36,6 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String TABLE_REGIONS = "regions";
     private static final String TABLE_CITIES = "cities";
     private static final String TABLE_CURRENCIES_VALUE = "currenciesValue";
-    private static final String TABLE_DATE = "date";
 
     //TABLE_ORGANIZATIONS column names
     private static final String ORGANIZATION_ID = "id";
@@ -47,8 +46,6 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String ORGANIZATION_PHONE = "phone";
     private static final String ORGANIZATION_ADDRESS = "address";
     private static final String ORGANIZATION_LINK = "link";
-    private static final String ORGANIZATION_DATE = "date";
-
     //TABLE_CURRENCIES column names
     private static final String CURRENCIES_ID = "id";
     private static final String CURRENCIES_NAME = "name";
@@ -69,17 +66,12 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String CURRENCIES_VALUE_ASK_ICON = "ask_icon";
     private static final String CURRENCIES_VALUE_BID_ICON = "bid_icon";
 
-    private static final String COLUMN_DATE = "date";
-
     public DBHelper(Context _context){
         super(_context, DB_NAME, null, DB_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
-        db.execSQL("create table " + TABLE_DATE + " (" + COLUMN_DATE + " text)");
-
         //Create currencies table
         db.execSQL("create table " + TABLE_CURRENCIES + " (" +
         CURRENCIES_ID + " text, " + CURRENCIES_NAME + " text)");
@@ -202,7 +194,6 @@ public class DBHelper extends SQLiteOpenHelper{
     private int setAskBidIcon(String _old, String _new){
         Double mOld = Double.valueOf(_old);
         Double mNew = Double.valueOf(_new);
-
         if (mNew > mOld) {
             return 1;
         } else {
@@ -251,7 +242,6 @@ public class DBHelper extends SQLiteOpenHelper{
         Cursor c = getReadableDatabase().query(TABLE_CURRENCIES_VALUE, null,
                null, null, null, null, null);
         if(c != null){
-            Log.d("DENYSYUK", "Cursor count = " + c.getCount());
             while (c.moveToNext()){
                 Currencies currencies = new Currencies();
                 currencies.setId(c.getString(c.getColumnIndex(CURRENCIES_VALUE_ID)));
@@ -265,7 +255,6 @@ public class DBHelper extends SQLiteOpenHelper{
 
             }
         }
-        Log.d("DENYSYUK", "LIST SIZE = " + lists.size());
         return lists;
 
     }
@@ -275,7 +264,6 @@ public class DBHelper extends SQLiteOpenHelper{
         Cursor c = getReadableDatabase().query(TABLE_CURRENCIES_VALUE, null,
                 CURRENCIES_VALUE_OID + " LIKE ?", new String[] {_id}, null, null, null, null);
         if(c != null){
-            Log.d("DENYSYUK", "Cursor count = " + c.getCount());
             while (c.moveToNext()){
                 Currencies currencies = new Currencies();
                 currencies.setId(c.getString(c.getColumnIndex(CURRENCIES_VALUE_ID)));
@@ -289,7 +277,6 @@ public class DBHelper extends SQLiteOpenHelper{
 
             }
         }
-        Log.d("DENYSYUK", "LIST SIZE = " + lists.size());
         return lists;
 
     }

@@ -40,7 +40,7 @@ public class DataManager {
         mUtils = new NetworkUtils(_context);
         mDBHelper = new DBHelper(_context);
         mPreference = mContext.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        getPreferences();
+        mPrefDate = getPreferences();
     }
 
     public static DataManager get(Context _context){
@@ -50,10 +50,11 @@ public class DataManager {
         return sDataManager;
     }
 
-    private void getPreferences(){
+    private String getPreferences(){
         if(mPreference.contains(APP_PREFERENCES_DATE)){
-            mPrefDate = mPreference.getString(APP_PREFERENCES_DATE, " ");
-            Log.d("DENYSYUK", "PREFS DATE = " + mPrefDate);
+            return mPreference.getString(APP_PREFERENCES_DATE, " ");
+        } else {
+            return "";
         }
     }
 
@@ -69,7 +70,6 @@ public class DataManager {
         if(!mFinance.getDate().equals(mPrefDate)) {
             setPreferences(mFinance.getDate());
             insertDB(mFinance);
-            Log.d("DENYSYUK", "INSERT");
         }
     }
 

@@ -49,6 +49,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/textLink"
+                        android:autoLink="web"
+                        android:linksClickable="true"
                         android:text="link"/>
 
                     <TextView
@@ -73,6 +75,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/textPhone"
+                        android:autoLink="phone"
+                        android:linksClickable="true"
                         android:text="phone"/>
                     
                 </LinearLayout>

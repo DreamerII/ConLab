@@ -32,15 +32,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.FinanceViewHolder>
     public static final String ORGANIZATION_POSITION = "position";
     private Context mContext;
     private Finance mFinance = new Finance();
-    private int pos;
     private NetworkUtils mUtils;
-    private AppCompatActivity mActivity;
-    private Finance finance = new Finance();
-    private Finance f = new Finance();
 
     public RVAdapter(Context _context, Finance _finance) {
         mContext = _context;
-        finance = _finance;
         mFinance.setOrganizations(_finance.getOrganizations());
         mFinance.setCurrencies(_finance.getCurrencies());
         mFinance.setCities(_finance.getCities());
@@ -62,7 +57,6 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.FinanceViewHolder>
 
     @Override
     public void onBindViewHolder(FinanceViewHolder holder, final int position) {
-        pos = position;
         String cid = mFinance.getOrganizations().get(position).getCityId();
         String rid = mFinance.getOrganizations().get(position).getRegionId();
         holder.mName.setText(mFinance.getOrganizations().get(position).getTitle());

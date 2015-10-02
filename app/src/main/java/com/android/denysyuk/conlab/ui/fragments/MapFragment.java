@@ -62,9 +62,6 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
 
         location = mFinance.getCities().get(cid)
         + " " +mFinance.getOrganizations().get(position).getAddress();
-
-
-
     }
 
     @Override

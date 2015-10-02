@@ -29,6 +29,7 @@ import java.util.Map;
  * Created by root on 28.09.15.
  */
 public class JsonDataLoader {
+    private static final String DATE = "date";
     private static final String REGIONS = "regions";
     private static final String CITIES = "cities";
     private static final String CURRENCIES = "currencies";
@@ -61,7 +62,7 @@ public class JsonDataLoader {
             String result = mRestClient.getUrl(ApiConstant.BASE_URL);
             JSONObject jsonObject = new JSONObject(result);
 
-            String date = jsonObject.getString("date");
+            String date = jsonObject.getString(DATE);
             mFinance.setDate(date);
 
                 Map<String, String> regionMap = new HashMap<>();

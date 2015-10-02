@@ -11,6 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,12 +22,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.denysyuk.conlab.R;
-import com.android.denysyuk.conlab.adapters.CurrenciesAdapter;
 import com.android.denysyuk.conlab.adapters.RVAdapter;
 import com.android.denysyuk.conlab.database.DataManager;
 import com.android.denysyuk.conlab.models.Currencies;
@@ -42,6 +40,7 @@ import java.util.List;
  * Created by root on 28.09.15.
  */
 public class DetailFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+    private static final String APP_RECEIVER = "com.android.denysyuk.conlab.utils";
     private int position;
     private Finance mFinance;
 
@@ -52,11 +51,6 @@ public class DetailFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private TextView mTextPhone;
     private TextView mTextAddress;
 
-    private CurrenciesAdapter mAdapter;
-    private ListView mListView;
-
-    private FloatingActionMenu fam;
-    private FrameLayout mFrameLayout;
     private FloatingActionButton fabMap;
     private FloatingActionButton fabLink;
     private FloatingActionButton fabPhone;
@@ -66,7 +60,6 @@ public class DetailFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private View mItemView;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private String mId;
 
     private BroadcastReceiver mReceiver;
 
@@ -111,7 +104,8 @@ public class DetailFragment extends Fragment implements SwipeRefreshLayout.OnRef
         mTextName = (TextView)v.findViewById(R.id.textName);
         mTextName.setText(mFinance.getOrganizations().get(position).getTitle());
         mTextLink = (TextView)v.findViewById(R.id.textLink);
-        mTextLink.setText("Сайт банка: " + mFinance.getOrganizations().get(position).getLink());
+        Linkify.addLinks(mTextLink, Linkify.WEB_URLS|Linkify.EMAIL_ADDRESSES);
+        mTextLink.setText("Сайт: " + mFinance.getOrganizations().get(position).getLink());
         mTextRegion = (TextView)v.findViewById(R.id.textRegion);
         mTextRegion.setText("Область: " + mFinance.getRegions().get(rid));
         mTextCity = (TextView)v.findViewById(R.id.textCity);
@@ -156,8 +150,10 @@ public class DetailFragment extends Fragment implements SwipeRefreshLayout.OnRef
         if(mItemView != null)
             mLayout.removeAllViews();
         for(Currencies c : lists) {
-            LayoutInflater inflater1 = getActivity().getLayoutInflater();
-            mItemView = inflater1.inflate(R.layout.currencies_list_item, null);
+            if(getActivity() == null)
+                return;
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            mItemView = inflater.inflate(R.layout.currencies_list_item, null);
 
             ImageView imageAsk = (ImageView)mItemView.findViewById(R.id.imageAsk);
             ImageView imageBid = (ImageView)mItemView.findViewById(R.id.imageBid);
@@ -220,20 +216,19 @@ public class DetailFragment extends Fragment implements SwipeRefreshLayout.OnRef
             @Override
             public void onReceive(Context context, Intent intent) {
                 String intentAction = intent.getAction();
-                if(intentAction.equals("com.android.denysyuk.conlab.utils")){
+                if(intentAction.equals(APP_RECEIVER)){
                     mSwipeRefreshLayout.setRefreshing(false);
                     addItemView();
                 }
             }
         };
         IntentFilter mFilter = new IntentFilter();
-        mFilter.addAction("com.android.denysyuk.conlab.utils");
+        mFilter.addAction(APP_RECEIVER);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, mFilter);
     }
 
     @Override
     public void onDestroy() {
-        Log.d("DENYSYUK", "onDestroy()");
         super.onDestroy();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
     }

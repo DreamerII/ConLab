@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,7 +15,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,23 +45,18 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
     private BroadcastReceiver mReceiver;
     private SwipeRefreshLayout swipeRefreshHome;
     private String mFilterString;
-    private SharedPreferences mPreferences;
-    private String mDate = "77";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
 
-
-
         mUtils = new NetworkUtils(getActivity());
-        mUtils.runReceiver();
-
-        listenerReceiver();
 
         mDataManager = DataManager.get(getActivity());
         if (mUtils.isConnectingToInternet()) {
+            mUtils.runReceiver();
+            listenerReceiver();
             mFinance = mDataManager.getFinance();
         } else {
             try {
@@ -79,7 +72,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.activity_main, container, false);
+        View v = inflater.inflate(R.layout.activity_home, container, false);
 
         Toolbar toolbar = (Toolbar)v.findViewById(R.id.toolbar_actionbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
