@@ -3,6 +3,7 @@ package com.android.denysyuk.conlab.utils.loaders;
 import android.os.AsyncTask;
 
 import com.android.denysyuk.conlab.api.ApiConstant;
+import com.android.denysyuk.conlab.utils.RestClient;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
@@ -41,27 +42,10 @@ public class PlaceMapLoader extends AsyncTask<String, Void, LatLng> {
     }
 
     private LatLng getLatLng(String uri) {
-        String mJsonString=null;
-        URL url = null;
+        String mJsonString = null;
+
         try {
-            url = new URL(uri);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        try {
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            httpURLConnection.setConnectTimeout(10000);
-            httpURLConnection.setRequestMethod("GET");
-            if (httpURLConnection.getResponseCode() == 200) {
-                InputStreamReader isr = new InputStreamReader(httpURLConnection.getInputStream());
-                BufferedReader reader = new BufferedReader(isr);
-                StringBuilder builder = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    builder.append(line);
-                }
-                mJsonString = reader.toString();
-            }
+            mJsonString = new RestClient().getUrl(uri);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -71,7 +55,7 @@ public class PlaceMapLoader extends AsyncTask<String, Void, LatLng> {
         double lng = 0;
         try {
             object = new JSONObject(mJsonString);
-            JSONArray array =(JSONArray) object.get("result");
+            JSONArray array =new JSONArray(object.getJSONArray("results").toString());
 
             lat = array.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getDouble("lat");
             lng = array.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getDouble("lng");

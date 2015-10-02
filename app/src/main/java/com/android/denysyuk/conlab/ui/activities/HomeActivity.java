@@ -8,7 +8,7 @@ import android.os.Bundle;
 import com.android.denysyuk.conlab.R;
 import com.android.denysyuk.conlab.ui.fragments.HomeFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

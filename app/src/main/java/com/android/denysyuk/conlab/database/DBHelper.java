@@ -153,7 +153,7 @@ public class DBHelper extends SQLiteOpenHelper{
     public void insertOrganization(List<Organization> _lists){
         List<Currencies> currencies = new ArrayList<>();
         currencies = getCurrencies();
-        getWritableDatabase().delete(TABLE_ORGANIZATIONS, null, null);
+        //getWritableDatabase().delete(TABLE_ORGANIZATIONS, null, null);
        // getWritableDatabase().delete(TABLE_CURRENCIES_VALUE, null, null);
         for(Organization o : _lists){
             ContentValues cv = new ContentValues();
@@ -166,7 +166,11 @@ public class DBHelper extends SQLiteOpenHelper{
             cv.put(ORGANIZATION_ADDRESS, o.getAddress());
             cv.put(ORGANIZATION_LINK, o.getLink());
 
-            getWritableDatabase().insert(TABLE_ORGANIZATIONS, null, cv);
+            long id = getWritableDatabase().update(TABLE_ORGANIZATIONS, cv,
+                    ORGANIZATION_ID + " LIKE ?", new String[]{o.getId()});
+            if(id == 0) {
+                getWritableDatabase().insert(TABLE_ORGANIZATIONS, null, cv);
+            }
             insertCurrencies(getCurrenciesListId(currencies, o.getId()), o.getCurrencies(), o.getId());
         }
     }

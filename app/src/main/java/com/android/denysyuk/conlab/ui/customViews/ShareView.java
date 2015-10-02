@@ -94,8 +94,8 @@ public class ShareView extends View {
         canvas.drawText(mFinance.getRegions().get(mFinance.getOrganizations().get(position).getRegionId()), 0, 0, p);
         canvas.translate(0, 40);
         canvas.drawText(mFinance.getCities().get(mFinance.getOrganizations().get(position).getCityId()), 0, 0, p);
-        canvas.translate(60, 40);
-        canvas.translate(60, 0);
+        canvas.translate(60, 20);
+        canvas.translate(80, 0);
 
 
 

@@ -57,7 +57,6 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         mDataManager = DataManager.get(getActivity());
         if (mUtils.isConnectingToInternet()) {
             mUtils.runReceiver();
-            listenerReceiver();
             mFinance = mDataManager.getFinance();
         } else {
             try {
@@ -119,6 +118,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
     }
 
     private void runService(){
+        listenerReceiver();
         Intent i = new Intent(getActivity(), DataLoaderIntentService.class);
         getActivity().startService(i);
     }
@@ -176,7 +176,6 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
     @Override
     public void onPause() {
         getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        Log.d("DENYSYUK", "OnPause");
         super.onPause();
     }
 
