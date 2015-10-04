@@ -146,7 +146,6 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
             mFinance = mDataManager.getFinance();
         } else {
             swipeRefreshHome.setRefreshing(false);
-            mRVAdapter.notifyDataSetChanged();
         }
     }
 
@@ -184,4 +183,5 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         super.onStart();
     }
+
 }

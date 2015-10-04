@@ -168,6 +168,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
             long id = getWritableDatabase().update(TABLE_ORGANIZATIONS, cv,
                     ORGANIZATION_ID + " LIKE ?", new String[]{o.getId()});
+            Log.d("DENYSYUK", "INSERT ID = " + id);
             if(id == 0) {
                 getWritableDatabase().insert(TABLE_ORGANIZATIONS, null, cv);
             }
@@ -198,6 +199,7 @@ public class DBHelper extends SQLiteOpenHelper{
             long id = getWritableDatabase().update(TABLE_CURRENCIES_VALUE, cv,
                     CURRENCIES_VALUE_ID + " LIKE ? AND " + CURRENCIES_VALUE_OID + " LIKE ?",
                     new String[]{c.getId(), _id});
+            Log.d("DENYSYUK", "INSERT CUR ID " + id);
             if(id == 0) {
                 getWritableDatabase().insert(TABLE_CURRENCIES_VALUE, null, cv);
             }
